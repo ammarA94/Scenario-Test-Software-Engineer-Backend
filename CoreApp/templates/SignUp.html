@@ -1,0 +1,74 @@
+{% load static  %}
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Ammar">
+    <meta name="keyword" content="Dashboard, Admin">
+    <title>User Registration</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-reset.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'assets/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
+    <script src="{%  static 'sweetalert/sweetalert.min.js' %}"></script>
+    <style>
+        
+    </style>
+</head>
+<body class="login-body">
+<div class="container" id="SignupId">
+    <form class="form-signin" id="file-upload-form" name="file-upload-form-name" method="post" action="{% url 'RegisterUser' %}">
+            <input id="submit-hidden" type="submit" style="display: none" />
+        {% csrf_token %}
+        <h2 class="form-signin-heading">user registration</h2>
+        <div class="login-wrap">
+            <input  value="{{username}}" name="username" id="username_id" type="text" class="form-control"  required placeholder="Full Name" autofocus>
+            <input type="email" name="email" id="email_id" class="form-control" placeholder="Email" required value="{{email}}" >
+            <input value="" type="password" name="password" id="password_id"  required class="form-control" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,12}$" title="8-12 characters, at least one letter,number & special characters"  placeholder="Password">
+            <button class="btn btn-lg btn-danger-new btn-block" type="button" onclick="SignUp()">Sign Up</button>
+        </div>
+
+    </form>
+
+</div>
+<div class="container" id="AuthenticationId" style="display:none">
+    <form class="form-signin" id="form-action" method="post" action="{% url 'AuthenticationProcess' %}">
+        {% csrf_token %}
+        <input id="submit-hidden2" type="submit" style="display: none" />
+        <h2 class="form-signin-heading">Email Authentication</h2>
+        <div class="login-wrap">
+            <input value="" type="text" name="code" id="code_id" required class="form-control mb-2" placeholder="Enter code sent to your email." autofocus>
+            <input value="" type="hidden" name="email_AuthenticationProcess" id="email_id_AuthenticationProcess" required class="form-control mb-2" placeholder="Enter code sent to your email." autofocus>
+            <input value="" type="hidden" name="AuthType" id="AuthType_id"  required class="form-control mb-2" placeholder="Enter code sent to your email." autofocus>
+            <button class="btn btn-lg btn-danger-new btn-block" type="button" onclick="AuthenticationProcess()">Verify</button>            
+        </div>
+
+    </form>
+
+</div>
+<div id="UpdatePasswordId" style="display:none">
+    <form class="form-signin" id="file-UpdatePassword"  method="post" action="{% url 'UpdatePassword' %}">
+        {% csrf_token %}
+        <input id="submit-hidden3" type="submit" style="display: none" />
+        <h2 class="form-signin-heading">Update Password</h2>
+        <div class="login-wrap">
+            <input value="" type="hidden" id="update_email_id" name="email_Update" required class="form-control">
+            <input value="" type="password" id="update_password_id" name="password_Update"  required pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,12}$" title="8-12 characters, at least one letter,number & special characters"  class="form-control" placeholder="Type Your New Password">
+            <button class="btn btn-lg btn-danger-new btn-block" type="button" onclick="UpdatePassword()">Update</button>
+        </div>
+    </form>
+</div>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/custom_js.js' %}"></script>
+
+</body>
+</html>

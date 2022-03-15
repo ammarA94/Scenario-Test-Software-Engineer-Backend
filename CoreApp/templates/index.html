@@ -1,0 +1,252 @@
+{% load static %}
+{% load i18n %}
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Ammar">
+    <meta name="keyword" content="Dashboard, Admin">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+
+    <title> {% blocktrans %}Dashboard{% endblocktrans %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-reset.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'assets/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!--    <link rel="icon" href="{% static session.Icon %}?v=2" type="image/png"  sizes="16x16" />-->
+    <!--right slidebar-->
+    <link href="{% static 'css/slidebars.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
+    <script src="{%  static 'sweetalert/sweetalert.min.js' %}"></script>
+    <!--dynamic table-->
+    <link href="{% static 'assets/advanced-datatable/media/css/demo_page.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/advanced-datatable/media/css/demo_table.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'assets/data-tables/DT_bootstrap.css' %}" />
+
+</head>
+
+
+<body>
+
+<section id="container" class="">
+    <!--header start-->
+    <header class="header white-bg">
+        {% include 'header_menu.html' %}
+    </header>
+    <!--header end-->
+    <!--sidebar start-->
+    {% include 'side_menu.html' %}
+
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- page start-->
+            {% if msg %}
+            <div id="container-flip" >
+
+                <div>{{msg|safe}}</div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="card">
+
+                        <header class="card-header">
+                            Recent Scheduler Details
+                        </header>
+                        <div class="card-body">
+
+                            {% if messages %}
+                            <div class="col-12">
+                                {% for message in messages %}
+                                <div class="alert alert-dismissible fade show {{ message.tags }}" id="alert" role="alert">
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                                    <strong> {{ message }} <i class="fa {{ message.tags }} bold fa-lg ml-2"></i></strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                    <form  id="file-upload-form"  method="post" >
+                                <input name="scanner" id="scannerid" type="hidden" value="">
+
+                                <div class="row state-overview" >
+                                    <div class="col-lg-4 col-sm-6" style="cursor: pointer;" onclick="SubmitThis('{{ SchedulerId }}')">
+
+                                        <section class="card" >
+                                            <div class="symbol maroon">
+                                                <i class="fa fa-bar-chart-o"></i>
+                                            </div>
+                                            <div class="value ">
+                                                <p>Last Run</p>
+                                                <p>
+                                                    {{ last_run }}
+<!--                                                    {{Data.0.3}}-->
+                                                </p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6" style="cursor: pointer;" onclick="SubmitThis('{{ SchedulerId }}')">
+                                        <section class="card">
+                                            <div class="symbol maroon">
+                                                <i class="fa fa-bar-chart-o"></i>
+                                            </div>
+                                            <div class="value">
+                                                <p>Processed Websites </p>
+                                                <p>
+                                                    {{ total_website }}
+                                                </p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6" style="cursor: pointer;" onclick="SubmitThis('{{ SchedulerId }}')">
+                                        <section class="card">
+                                            <div class="symbol maroon">
+                                                <i class="fa fa-bar-chart-o"></i>
+                                            </div>
+                                            <div class="value">
+                                                <p>Fetched Articles</p>
+                                                <p>
+                                                    {{ total_articles }}
+                                                </p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                    </section>
+                </div>
+            </div>
+            <section class="card">
+                <header class="card-header">
+                    Details
+                </header>
+                <div class="adv-table p-2">
+                    <form  id="file-upload-form" method="post">
+                        {% csrf_token %}
+                        <input id="submit-hidden" type="submit" style="display: none" />
+                        <div class="form-row mb-2 p-2">
+                            <div class="col-md-12">
+                                <span style="default:none"><input type="hidden" name="csrfmiddlewaretoken" value="9hxjsLnjpJSVOhQlFuRADNqw7FNRAryK9d7hrpfyUjLOV0q993298EfkXmZJN7di"></span>
+                                <button {% if not Data %} disabled {% endif %}  class="btn btn-shadow btn-default btn-sm action-btn mt-2" id="button-export" type="button" onclick="exportfunc()" >Export</button>
+
+                            </div>
+                        </div>
+                        <div class="table-responsive  p-2">
+
+                            <div class="adv-table">
+                                {% if not Data %}
+                                <div id="container-flip" >
+                                    <div>{% blocktrans %}No Records Yet{% endblocktrans %}</div>
+                                </div>
+
+                                {% else %}
+                                <table class=" display table table-bordered table-striped  " id="dynamic-table">
+                                    <thead >
+                                    {% csrf_token %}
+
+                                    <tr>
+                                        <!--                                                    <th></th>-->
+                                        <th>Website</th>
+                                        <th>Total Articles</th>
+                                        <th>Start at</th>
+
+                                    </tr>
+
+                                    </thead>
+                                    <tbody id="tablebody">
+                                    {% csrf_token %}
+                                    {% for records in Data %}
+                                    <tr>
+                                        <td class="numeric">{{ records.1 }}</td>
+                                        <td class="numeric">{{ records.2 }}</td>
+<!--                                        <td class="numeric">{{ last_run }}</td>-->
+                                        <td class="numeric">{{ records.3 }}</td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                                {% endif %}
+
+
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </section>
+
+            {%endif%}
+            <!-- page end-->
+        </section>
+    </section>
+    <!--main content end-->
+
+    <!-- Right Slidebar start -->
+    <!-- Right Slidebar end -->
+    {% include 'Footer.html' %}
+
+    <!--footer end-->
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+<script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script class="include" type="text/javascript" src="{% static 'js/jquery.dcjqaccordion.2.7.js' %}"></script>
+<!--custom switch-->
+<script src="{% static 'js/bootstrap-switch.js' %}"></script>
+<!--custom tagsinput-->
+<script src="{% static 'js/jquery.tagsinput.js' %}"></script>
+<!--custom checkbox & radio-->
+<script src="{% static 'js/advanced-form-components.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/bootstrap-inputmask/bootstrap-inputmask.min.js' %}"></script>
+<script src="{% static 'js/respond.min.js' %}" ></script>
+
+<!--right slidebar-->
+<script src="{% static 'js/slidebars.min.js' %}"></script>
+<!--common script for all pages-->
+<script src="{% static 'js/common-scripts.js' %}"></script>
+
+<!--script for this page-->
+<script src="{% static 'js/form-component.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'assets/advanced-datatable/media/js/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/data-tables/DT_bootstrap.js' %}"></script>
+<script src="{% static 'js/dynamic_table_init.js' %}"></script>
+<script src="{% static 'js/custom_js.js' %}"></script>
+
+<script>
+function exportfunc() {
+    $('#file-upload-form').attr('action','/exporlastscheduler');
+    $('#file-upload-form').submit();
+
+}
+function SubmitThis(id) {
+    $('#scannerid').val(id);
+    $('#file-upload-form').attr('action','/detail_scheduler/');
+    $('#file-upload-form').submit();
+
+}
+</script>
+</body>
+</html>

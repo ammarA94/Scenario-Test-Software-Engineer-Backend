@@ -1,0 +1,25 @@
+{% load static  %}
+{% load i18n %}
+<div class="sidebar-toggle-box">
+    <i class="fa fa-bars"></i>
+</div>
+<!--logo start-->
+<a href="{% url 'YourApps' %}" class="logo"><span>Djano Test App</span></a>
+
+
+<div class="top-nav ">
+    <!--search & user info start-->
+    <ul class="nav pull-right top-menu">
+
+        <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                <span class="username">Login as {{ session.displayname}}</span>
+            </a>
+<!--            <ul class="dropdown-menu extended logout dropdown-menu-right">-->
+<!--                <div class="log-arrow-up "></div>-->
+<!--                <li><a href="{% url 'logout' %}"><i class="fa fa-key"></i> Log Out</a></li>-->
+<!--            </ul>-->
+        </li>
+    </ul>
+</div>
